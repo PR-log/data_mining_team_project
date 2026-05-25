@@ -1,4 +1,5 @@
 # data_mining_team_project
 최종 코드: 축산 데이터 코드.ipynb   
+수정방법: add file에서 upload file, 파일명 같게 해서 업로드하면 변경사항 저장  
 잘못저장해도 수정 가능.   
 파일 자유롭게 만들고 작성해주세요  
