@@ -2,6 +2,7 @@
 ```
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 ```
 ```
 weather = pd.read_csv(
@@ -110,15 +111,19 @@ df["coldwave"] = ( # 한파 여부
 ```
 # WGRADE 고유값 확인 # 육량등급(A/B/C)
 print(df["WGRADE"].unique())
+
+# LAST_GRADE 고유값 확인 # 육질등급(1++, 1+, 1, 2, 3)
+```
+
+```
+print(df["LAST_GRADE"].unique())
+print(df["WGRADE"].value_counts()) # 결측치 5363개 존재(-99.0)
+print(df["LAST_GRADE"].value_counts()) # 결측치 거의 안 보임 # LAST_GRADE를 Y로 사용
 ```
 
 
-# LAST_GRADE 고유값 확인 # 육질등급(1++, 1+, 1, 2, 3)
-print(df["LAST_GRADE"].unique())
-print(df["WGRADE"].value_counts()) # 결측치 5363개 존재(-99.0)
-
-print(df["LAST_GRADE"].value_counts()) # 결측치 거의 안 보임 # LAST_GRADE를 Y로 사용
 # 육질등급별 주요 변수 평균 비교
+```
 # 육질등급별 체중
 df.groupby("LAST_GRADE")["WEIGHT"].mean()
 # 육질등급별 평균기온
@@ -131,14 +136,21 @@ df.groupby("LAST_GRADE")["REA"].mean()
 df.groupby("LAST_GRADE")["WINDEX"].mean()
 # 나이
 df.groupby("LAST_GRADE")["AGE"].mean()
+```
+
 # 기상 변수 비교
+```
 # 육질등급별 평균 강수량
 df.groupby("LAST_GRADE")["rn_day"].mean()
 # 육질등급별 평균 풍속
 df.groupby("LAST_GRADE")["ws_davg"].mean()
 # 육질등급별 일교차
 df.groupby("LAST_GRADE")["temp_gap"].mean()
+```
+
+
 # 시각화
+```
 # 육질등급별 체중 그래프
 import matplotlib.pyplot as plt
 
@@ -150,6 +162,9 @@ plt.xlabel("LAST_GRADE")
 plt.ylabel("Average Weight")
 
 plt.show()
+```
+
+```
 # 육질등급별 평균기온 그래프
 df.groupby("LAST_GRADE")["temp_avg"].mean().plot(
     kind="bar"
@@ -159,7 +174,10 @@ plt.xlabel("LAST_GRADE")
 plt.ylabel("Average Temperature")
 
 plt.show()
+```
+
 # 상관관계 분석
+```
 numeric_cols = [
     "WEIGHT",
     "BACKFAT",
@@ -175,9 +193,10 @@ numeric_cols = [
 corr_matrix = df[numeric_cols].corr()
 
 print(corr_matrix)
-# 히트맵 시각화
-import matplotlib.pyplot as plt
+```
 
+# 히트맵 시각화
+```
 plt.figure(figsize=(10, 8))
 
 plt.imshow(corr_matrix)
@@ -196,7 +215,10 @@ plt.yticks(
 )
 
 plt.show()
+```
+
 # 폭염 영향 분석 (최고 기온이 33도 이상이면 1, 아니면 0으로 설정)
+```
 # 폭염 여부별 평균 체중
 df.groupby("heatwave")["WEIGHT"].mean()
 # 폭염 여부별 평균 육량지수
@@ -206,7 +228,10 @@ pd.crosstab(
     df["heatwave"],
     df["LAST_GRADE"]
 )
+```
+
 # 산점도
+```
 # -99를 NaN 처리
 df = df.replace(-99, np.nan) # 숫자형
 df = df.replace("-99", np.nan) # 문자형
@@ -233,6 +258,8 @@ plt.xlabel("Average Temperature")
 plt.ylabel("Weight")
 
 plt.show()
+```
+```
 # 육량지수 vs 평균기온
 plt.figure(figsize=(6, 4))
 
@@ -246,12 +273,19 @@ plt.xlabel("Average Temperature")
 plt.ylabel("WINDEX")
 
 plt.show()
+```
+
 # 지역별 분석
+
+```
 # 시도별 평균 체중
 df.groupby("sido")["WEIGHT"].mean().sort_values()
 # 시도별 평균 육량지수
 df.groupby("sido")["WINDEX"].mean().sort_values()
+```
+
 # 계절 변수
+```
 # 날짜형 변환
 df["JUDGE_DATE"] = pd.to_datetime(
     df["JUDGE_DATE"]
@@ -282,8 +316,11 @@ df.groupby("season")["WEIGHT"].mean()
 df.groupby("season")["WINDEX"].mean()
 # 계절별 평균 기온
 df.groupby("season")["temp_avg"].mean()
+```
+
 # area 데이터 연결(train + weather 데이터에 area도 merge)
 # 추가로 해야할 듯한 부분
+```
 df = pd.merge( # area는 농가 규모
     df,
     area,
@@ -304,3 +341,4 @@ density_df.groupby(
     "LAST_GRADE"
 )["density"].mean()
 density_df["density"].describe()
+```
