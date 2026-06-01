@@ -1,0 +1,68 @@
+== model_v4 evaluation (sample=200,000) ==
+available models: ['random_forest', 'extra_trees', 'hist_gb', 'xgboost', 'lightgbm']
+parts: {'train': (140000, 79), 'valid': (30000, 79), 'test': (30000, 79)}   (63s)
+
+======================================================================
+[random_forest]
+  unified      valid=0.9073 test=0.9087 (50s)
+  gender_split valid=0.9329 test=0.9330 (39s)
+
+======================================================================
+[lightgbm]
+  unified      valid=0.9814 test=0.9790 (128s)
+  gender_split valid=0.9844 test=0.9824 (122s)
+
+======================================================================
+[xgboost]
+  unified      valid=0.9809 test=0.9793 (254s)
+  gender_split valid=0.9830 test=0.9806 (267s)
+
+--- no_wgrade comparison ---
+      config          model      strategy  valid_macro_f1  test_macro_f1     seconds status
+0  no_wgrade       lightgbm  gender_split        0.984442       0.982436  121.986581     ok
+1  no_wgrade        xgboost  gender_split        0.983016       0.980560  266.802405     ok
+2  no_wgrade        xgboost       unified        0.980939       0.979349  253.828677     ok
+3  no_wgrade       lightgbm       unified        0.981377       0.978977  128.068724     ok
+4  no_wgrade  random_forest  gender_split        0.932854       0.933032   39.037969     ok
+5  no_wgrade  random_forest       unified        0.907344       0.908749   50.102499     ok
+
+======================================================================
+[lightgbm]
+  unified      valid=0.9861 test=0.9841 (365s)
+
+--- WGRADE ablation (lightgbm unified) ---
+        config     model strategy  valid_macro_f1  test_macro_f1     seconds status
+0  with_wgrade  lightgbm  unified        0.986064        0.98406  364.926033     ok
+
+=== BEST (no_wgrade): lightgbm_gender_split  test_macro_f1=0.9824 ===
+
+per-class F1 (test):
+              precision  recall  f1-score    support
+1++A              0.993   0.997     0.995   2230.000
+1++B              0.997   0.995     0.996   3802.000
+1++C              0.997   0.998     0.997   1762.000
+1+A               0.985   0.992     0.989   1849.000
+1+B               0.995   0.993     0.994   3866.000
+1+C               0.998   0.997     0.997   1759.000
+1A                0.979   0.981     0.980   1845.000
+1B                0.989   0.990     0.990   3793.000
+1C                0.998   0.994     0.996   1628.000
+2A                0.960   0.973     0.966   1440.000
+2B                0.980   0.976     0.978   2617.000
+2C                0.996   0.989     0.992    995.000
+3A                0.907   0.946     0.926    577.000
+3B                0.965   0.951     0.958   1347.000
+3C                0.982   0.957     0.969    396.000
+등외                1.000   0.989     0.995     94.000
+accuracy          0.987   0.987     0.987      0.987
+macro avg         0.983   0.982     0.982  30000.000
+weighted avg      0.987   0.987     0.987  30000.000
+
+per-sex macro-F1 (test):
+  sex      n  macro_f1
+0  거세  15226    0.9729
+1   수    193    0.6354
+2   암  14581    0.9836
+
+TOTAL TIME: 1293s
+DONE_V4_EVAL
